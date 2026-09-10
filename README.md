@@ -343,7 +343,7 @@ Invalid requests return JSON validation errors.
 Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Harishpmkumar/order-inventory.git
 ```
 
 Go into the project
