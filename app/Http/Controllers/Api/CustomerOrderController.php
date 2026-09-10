@@ -30,7 +30,10 @@ class CustomerOrderController extends Controller
         }
 
         $orders = $customer->orders()
-            ->with('orderItems.product')
+            ->with([
+                'customer',
+                'orderItems.product',
+            ])
             ->latest()
             ->get();
 

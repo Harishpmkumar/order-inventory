@@ -14,6 +14,10 @@ class OrderService
     public function createOrder(array $data): Order
     {
         return DB::transaction(function () use ($data) {
+            $subtotal = 0;
+            $tax = 0;
+            $orderItems = [];
+
             $customer = Customer::firstOrCreate(
                 ['email' => $data['customer']['email']],
                 ['name' => $data['customer']['name']]
@@ -39,10 +43,6 @@ class OrderService
 
                 $products[$product->id] = $product;
             }
-
-            $subtotal = 0;
-            $tax = 0;
-            $orderItems = [];
 
             /*
              * All required product rows are now locked.
@@ -117,7 +117,7 @@ class OrderService
 
             $order->orderItems()->createMany($orderItems);
 
-            SendOrderConfirmation::dispatch($order->id);
+            SendOrderConfirmation::dispatch($order->id)->afterCommit();
 
             return $order->load([
                 'customer',
